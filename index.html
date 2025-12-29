@@ -3,146 +3,38 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Worker Salary System</title>
+<title>Sohanur Construction - Advanced Salary System</title>
 
 <style>
-body {
-    font-family: "Poppins", sans-serif;
-    background: #eef2f7;
-    padding: 20px;
-}
-
-h2 {
-    text-align: center;
-    color: #005bbb;
-    font-weight: 700;
-    margin-bottom: 20px;
-}
-
-.container {
-    max-width: 1300px;
-    margin: auto;
-    background: white;
-    padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-}
-
-.filters {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-    margin-bottom: 15px;
-}
-
-input {
-    padding: 10px;
-    border: 1px solid #bbb;
-    border-radius: 8px;
-    font-size: 14px;
-}
-
-button {
-    padding: 10px 16px;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-}
-
-button:hover {
-    background: #0056c7;
-}
-
-table {
-    width:100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-}
-
-thead {
-    background: linear-gradient(90deg, #1976d2, #42a5f5);
-    color: white;
-}
-
-th, td {
-    padding: 10px;
-    border-bottom:1px solid #ddd;
-    font-size:14px;
-    white-space:nowrap;
-    text-align:center;
-}
-
-tr:hover {
-    background:#f2f7ff;
-}
-
-/* Summary Page Styles */
-.summary-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100px;
-    background: #005bbb;
-    color: white;
-    padding: 10px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-sizing: border-box;
-    z-index: 1000;
-}
-
-.summary-header .company-info {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    line-height: 1.2;
-    font-weight: 600;
-}
-
-.summary-header img {
-    height: 80px;
-    object-fit: contain;
-}
-
-@media print {
-    body { margin-top: 110px; }
-    table { page-break-inside: auto; margin-top: 20px; }
-    tr { page-break-inside: avoid; page-break-after: auto; }
-}
+    body { font-family: "Poppins", sans-serif; background: #eef2f7; padding: 20px; }
+    h2 { text-align: center; color: #005bbb; font-weight: 700; margin-bottom: 20px; }
+    .container { max-width: 1400px; margin: auto; background: white; padding: 20px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+    .filters { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; justify-content: center; }
+    input { padding: 10px; border: 1px solid #bbb; border-radius: 8px; font-size: 14px; }
+    button { padding: 10px 16px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
+    button:hover { background: #0056c7; }
+    table { width:100%; border-collapse: collapse; margin-top: 15px; }
+    thead { background: linear-gradient(90deg, #1976d2, #42a5f5); color: white; }
+    th, td { padding: 10px; border: 1px solid #ddd; font-size:13px; text-align:center; }
 </style>
 </head>
 <body>
 
-<h2>Worker Salary Report</h2>
+<h2>Worker Salary & Payment Management</h2>
 
 <div class="container">
     <div class="filters">
         <input type="date" id="startDate">
         <input type="date" id="endDate">
-        <input type="text" id="workerSearch" placeholder="Worker ID Type Here">
-        <button onclick="filterData()">Filter</button>
-        <button onclick="generateSummary()">Summary</button>
+        <input type="text" id="workerSearch" placeholder="Worker ID">
+        <button onclick="filterData()">Filter List</button>
+        <button onclick="generateSummary()" style="background: #28a745;">Generate Summary Report</button>
     </div>
 
-    <table>
+    <table id="mainTable">
         <thead>
             <tr>
-                <th>Worker ID</th>
-                <th>Worker Name</th>
-                <th>Designation</th>
-                <th>Date</th>
-                <th>Attended</th>
-                <th>Day Salary</th>
-                <th>Attended Salary</th>
-                <th>OT Hour</th>
-                <th>OT Rate</th>
-                <th>OT Amount</th>
-                <th>Total Salary</th>
+                <th>Worker ID</th><th>Name</th><th>Date</th><th>Attended</th><th>Rate</th><th>OT Hour</th><th>Total</th>
             </tr>
         </thead>
         <tbody id="outputTable"></tbody>
@@ -152,9 +44,11 @@ tr:hover {
 <script>
 const link1 = "https://docs.google.com/spreadsheets/d/e/2PACX-1vScKUqfoXQNBZy7kPYd6bYpHV8_KsOMTDAA-Rx9PI03rZRUkoRHIz25htZDEuyhf8SerewYetdOgJai/pub?gid=544154648&single=true&output=csv";
 const link2 = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQeMfVC0OT9CSn4ShLoMNqfZ3pFD5RlkS2dCj1jdfjzvvvGYWOSUy5Mr-zdQ97lb96sjnoXZh5zFaCP/pub?gid=1560298674&single=true&output=csv";
+const link3 = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSTC_KsZ6QoVhc3gqToo1mV6fjmYwprGfieo2hVQ_4MUWViZNpslBZo3g7lua8g3cSxQbVMzaVJvgpl/pub?gid=0&single=true&output=csv";
 
 let workerList = {};
 let attendanceList = [];
+let paymentList = [];
 
 function parseCSV(text) {
     return text.split("\n").map(row => row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g));
@@ -167,155 +61,152 @@ function formatDate(d) {
     return d;
 }
 
-fetch(link1).then(r=>r.text()).then(data=>{
-    let rows=parseCSV(data).slice(1);
-    rows.forEach(c=>{
-        if(!c||!c[1]) return;
-        workerList[c[1]]={name:c[2], des:c[3], rate:parseFloat(c[5])||0};
-    });
-    loadAttendance();
-});
+async function loadAllData() {
+    try {
+        const [res1, res2, res3] = await Promise.all([fetch(link1), fetch(link2), fetch(link3)]);
+        const [data1, data2, data3] = await Promise.all([res1.text(), res2.text(), res3.text()]);
 
-function loadAttendance() {
-    fetch(link2).then(r=>r.text()).then(data=>{
-        let rows=parseCSV(data).slice(1);
-        rows.forEach(c=>{
-            if(!c||!c[1]) return;
-            attendanceList.push({id:c[1], date:formatDate(c[5]), attended:parseFloat(c[6])||0, ot:parseFloat(c[7])||0});
+        parseCSV(data1).slice(1).forEach(c => {
+            if(c && c[1]) workerList[c[1].trim()] = {name:c[2], des:c[3], rate:parseFloat(c[5])||0};
+        });
+        parseCSV(data2).slice(1).forEach(c => {
+            if(c && c[1]) attendanceList.push({id:c[1].trim(), date:formatDate(c[5]), attended:parseFloat(c[6])||0, ot:parseFloat(c[7])||0});
+        });
+        parseCSV(data3).slice(1).forEach(c => {
+            if(c && c[0]) paymentList.push({id:c[0].trim(), date:formatDate(c[1]), amount:parseFloat(c[2])||0});
         });
         filterData();
-    });
+    } catch(e) { console.error("Error loading data", e); }
 }
+
+window.onload = loadAllData;
 
 function filterData() {
     let start = document.getElementById("startDate").value;
     let end = document.getElementById("endDate").value;
     let search = document.getElementById("workerSearch").value;
-
-    let table=document.getElementById("outputTable");
-    table.innerHTML="";
-
-    attendanceList.forEach(row=>{
+    let table = document.getElementById("outputTable");
+    table.innerHTML = "";
+    attendanceList.forEach(row => {
         if(!workerList[row.id]) return;
         if(search && !row.id.includes(search)) return;
-        if(start && row.date<start) return;
-        if(end && row.date>end) return;
-
+        if(start && row.date < start) return;
+        if(end && row.date > end) return;
         let w = workerList[row.id];
-        let attendedSalary=row.attended*w.rate;
-        let otRate=w.rate/8;
-        let otAmount=row.ot*otRate;
-        let total=attendedSalary+otAmount;
-
-        table.innerHTML+=`
-        <tr>
-            <td>${row.id}</td>
-            <td>${w.name}</td>
-            <td>${w.des}</td>
-            <td>${row.date}</td>
-            <td>${row.attended}</td>
-            <td>${w.rate}</td>
-            <td>${attendedSalary.toFixed(2)}</td>
-            <td>${row.ot}</td>
-            <td>${otRate.toFixed(2)}</td>
-            <td>${otAmount.toFixed(2)}</td>
-            <td>${total.toFixed(2)}</td>
-        </tr>`;
+        let total = (row.attended * w.rate) + (row.ot * (w.rate / 8));
+        table.innerHTML += `<tr><td>${row.id}</td><td>${w.name}</td><td>${row.date}</td><td>${row.attended}</td><td>${w.rate}</td><td>${row.ot}</td><td>${total.toFixed(2)}</td></tr>`;
     });
 }
 
-// Summary page with multi-row header
 function generateSummary() {
-    let start=document.getElementById("startDate").value;
-    let end=document.getElementById("endDate").value;
-    let summary={}; let grandTotal=0;
+    let start = document.getElementById("startDate").value;
+    let end = document.getElementById("endDate").value;
+    let summary = {}; 
+    let grandPayable = 0, grandPaid = 0, grandDue = 0;
 
-    attendanceList.forEach(r=>{
-        if(!workerList[r.id]) return;
-        if(start && r.date<start) return;
-        if(end && r.date>end) return;
-
-        let w=workerList[r.id];
-        if(!summary[r.id]) summary[r.id]={name:w.name, des:w.des, attended:0, ot:0, salary:0};
-
-        let att=r.attended*w.rate;
-        let otRate=w.rate/8;
-        let otAmount=r.ot*otRate;
-        let total=att+otAmount;
-
-        summary[r.id].attended+=r.attended;
-        summary[r.id].ot+=r.ot;
-        summary[r.id].salary+=total;
-
-        grandTotal+=total;
+    attendanceList.forEach(r => {
+        if((start && r.date < start) || (end && r.date > end) || !workerList[r.id]) return;
+        let w = workerList[r.id];
+        if(!summary[r.id]) summary[r.id] = {id:r.id, name:w.name, des:w.des, rate:w.rate, att:0, ot:0, totalSalary:0, totalPaid:0};
+        summary[r.id].att += r.attended;
+        summary[r.id].ot += r.ot;
+        summary[r.id].totalSalary += (r.attended * w.rate) + (r.ot * (w.rate / 8));
     });
 
-    let win=window.open("","_blank");
-    let html=`<html><head><title>Summary</title>
-    <style>
-        body{font-family:Poppins; padding:20px; background:#eef2f7;}
-        table{width:100%; border-collapse:collapse; margin-top:120px; background:white;}
-        th{background:#005bbb; color:white; padding:10px;}
-        td{padding:8px; border-bottom:1px solid #ccc; text-align:center;}
-        h2{text-align:center; color:#005bbb; margin-bottom:10px;}
-        .summary-header{position: fixed; top:0; left:0; width:100%; height:100px; background:#005bbb; color:white; padding:10px 20px; display:flex; justify-content: space-between; align-items:center; box-sizing:border-box; z-index:1000;}
-        .summary-header .company-info{display:flex; flex-direction:column; justify-content:center; line-height:1.2; font-weight:600;}
-        .summary-header img{height:80px; object-fit:contain;}
-        @media print{body{margin-top:110px;} table{page-break-inside:auto;} tr{page-break-inside:avoid; page-break-after:auto;}}
-    </style>
-    </head><body>
-
-    <div class="summary-header">
-        <div class="company-info">
-            <div>Sohanur Construction & Manpower Solution</div>
-            <div>Email: sohanurconstructionltd@gmail.com</div>
-            <div>Phone: 01805-090910 | 01805-090950</div>
-        </div>
-        <img src="https://i.ibb.co/b5F7MVpV/sohanur-Construction-logi-removebg-preview.png" alt="Company Logo">
-    </div>
-
-    <h2>Summary Report (${start} to ${end})</h2>
-
-    <table>
-        <thead>
-            <tr>
-                <th rowspan="2">Worker ID</th>
-                <th rowspan="2">Name</th>
-                <th rowspan="2">Designation</th>
-                <th rowspan="2">Total Attended</th>
-                <th rowspan="2">Day Salary</th>
-                <th rowspan="2">Attended Salary</th>
-                <th colspan="3">OT</th>
-                <th rowspan="2">Total Salary</th>
-            </tr>
-            <tr>
-                <th>Total OT</th>
-                <th>OT Rate</th>
-                <th>OT Amount</th>
-            </tr>
-        </thead>
-        <tbody>`;
-
-    Object.keys(summary).forEach(id=>{
-        let w=summary[id];
-        let otRate = w.salary>0 ? (w.salary - w.attended*workerList[id].rate)/w.ot || 0 : 0;
-        html+=`<tr>
-            <td>${id}</td>
-            <td>${w.name}</td>
-            <td>${w.des}</td>
-            <td>${w.attended}</td>
-            <td>${workerList[id].rate}</td>
-            <td>${(w.attended*workerList[id].rate).toFixed(2)}</td>
-            <td>${w.ot}</td>
-            <td>${otRate.toFixed(2)}</td>
-            <td>${(w.salary - w.attended*workerList[id].rate).toFixed(2)}</td>
-            <td>${w.salary.toFixed(2)}</td>
-        </tr>`;
+    paymentList.forEach(p => {
+        if((start && p.date < start) || (end && p.date > end)) return;
+        if(summary[p.id]) summary[p.id].totalPaid += p.amount;
     });
 
-    html+=`</tbody></table><h2>Total Salary = ${grandTotal.toFixed(2)} Tk</h2></body></html>`;
+    let win = window.open("", "_blank");
+    let rowsHTML = "";
+    Object.values(summary).forEach(s => {
+        let basic = s.att * s.rate;
+        let otRate = s.rate / 8;
+        let otAmount = s.ot * otRate;
+        let due = s.totalSalary - s.totalPaid;
+        
+        grandPayable += s.totalSalary;
+        grandPaid += s.totalPaid;
+        grandDue += due;
 
-    win.document.write(html);
+        rowsHTML += `
+            <tr>
+                <td>${s.id}</td>
+                <td>${s.name}</td>
+                <td>${s.des}</td>
+                <td>${s.att}</td>
+                <td>${s.rate}</td>
+                <td>${basic.toFixed(2)}</td>
+                <td>${s.ot}</td>
+                <td>${otRate.toFixed(2)}</td>
+                <td>${otAmount.toFixed(2)}</td>
+                <td>${s.totalSalary.toFixed(2)}</td>
+                <td>${s.totalPaid.toFixed(2)}</td>
+                <td style="font-weight:bold; color:${due > 0 ? 'red' : 'green'};">${due.toFixed(2)}</td>
+            </tr>`;
+    });
+
+    win.document.write(`
+        <html><head><title>Salary Report</title>
+        <style>
+            @media print {
+                thead { display: table-header-group; }
+                tfoot { display: table-footer-group; }
+                .no-print { display: none; }
+                body { margin: 0.5cm; }
+            }
+            body { font-family: Arial, sans-serif; font-size: 11px; }
+            .company-name { text-align: center; font-size: 22px; font-weight: bold; margin-bottom: 2px; }
+            .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+            .info-left { line-height: 1.3; }
+            .date-highlight { text-align: center; margin: 5px 0; padding: 4px; border-top: 1.5px solid #000; border-bottom: 1.5px solid #000; font-weight: bold; background: #f2f2f2; }
+            table { width: 100%; border-collapse: collapse; }
+            th, td { border: 1px solid #000; padding: 5px; text-align: center; }
+            th { background: #eee !important; -webkit-print-color-adjust: exact; font-weight: bold; }
+            .footer-total td { font-weight: bold; background: #f9f9f9; font-size: 12px; }
+            .sig-area { display: flex; justify-content: space-between; margin-top: 50px; }
+            .sig-box { border-top: 1px solid #000; width: 150px; text-align: center; padding-top: 5px; }
+        </style>
+        </head><body>
+            <div class="company-name">SOHANUR CONSTRUCTION & MANPOWER SOLUTION</div>
+            <div class="header-flex">
+                <div class="info-left">
+                    <b>Phone:</b> 01805-090910 | 01805-090950<br>
+                    <b>Email:</b> sohanurconstructionltd@gmail.com<br>
+                    <b>Address:</b> Naogaon Sadar, Naogaon (6500)
+                </div>
+                <img src="https://i.ibb.co/b5F7MVpV/sohanur-Construction-logi-removebg-preview.png" height="65">
+            </div>
+            <div class="date-highlight">SUMMARY REPORT: ${start || 'ALL'} TO ${end || 'ALL'}</div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th><th>Name</th><th>Designation</th><th>Days</th><th>Rate</th><th>Basic</th><th>OT(H)</th><th>OT Rate</th><th>OT Amt</th><th>Total Payable</th><th>Total Paid</th><th>Due Salary</th>
+                    </tr>
+                </thead>
+                <tbody>${rowsHTML}</tbody>
+                <tfoot>
+                    <tr class="footer-total">
+                        <td colspan="9" style="text-align:right; padding-right:15px;">GRAND TOTAL:</td>
+                        <td>${grandPayable.toFixed(2)}</td>
+                        <td>${grandPaid.toFixed(2)}</td>
+                        <td style="color:red;">${grandDue.toFixed(2)}</td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <div class="sig-area">
+                <div class="sig-box">Site Foreman</div>
+                <div class="sig-box">Director</div>
+            </div>
+
+            <div class="no-print" style="margin-top: 30px; text-align:center;">
+                <button onclick="window.print()" style="padding:10px 30px; font-weight:bold; cursor:pointer;">PRINT / SAVE PDF</button>
+            </div>
+        </body></html>
+    `);
     win.document.close();
 }
 </script>
